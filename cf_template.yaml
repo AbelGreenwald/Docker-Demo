@@ -260,7 +260,7 @@
                         "commands" : {
                             "StartDocker" : {
                                 "command" : "docker run hello-world",
-                                "ignoreErrors" : "true"
+                                "ignoreErrors" : "false"
                             }
                         }
                     }
@@ -301,7 +301,7 @@
 
     "Outputs" : {
         "NatEIP": {
-            "Description": "The Elastive IP address assigned to the NAT Gateway",
+            "Description": "The Elastic IP address assigned to the NAT Gateway",
             "Value": { "Ref": "EIP" }
         }
     }

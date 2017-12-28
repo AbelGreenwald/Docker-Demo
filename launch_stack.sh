@@ -1,7 +1,7 @@
 
 if [ $# != 1 ]; then
 	echo "usage: $0 num"
-	echo "num: the number of instances to launch"
+	echo "num: Number of instances to launch"
 	exit 1
 fi
 
