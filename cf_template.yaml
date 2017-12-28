@@ -43,7 +43,7 @@
             "Type" : "AWS::EC2::VPCGatewayAttachment",
             "Properties" : {
                 "VpcId" : { "Ref" : "VPC" },
-                "InternetGatewayId" : { "Ref" : "InternetGateway" }
+                "InternetGatewayId" : { "Ref" : "InternetGateway" },
             }
         },
 
@@ -52,8 +52,9 @@
             "Properties" : {
                 "AvailabilityZone" : "us-east-1e",
                 "VpcId" : { "Ref" : "VPC" },
-                "CidrBlock" : "172.31.255.0/28"
-            }
+                "CidrBlock" : "172.31.255.0/28",
+                "Tags" : [ {"Key" : "Name", "Value" : "Docker-Demo-Public-Subnet"}]
+            },
         },
 
         "PrivateSubnet" : {
@@ -61,8 +62,9 @@
             "Properties" : {
                 "AvailabilityZone" : "us-east-1e",
                 "VpcId" : { "Ref" : "VPC" },
-                "CidrBlock" : "172.31.255.16/28"
-            }
+                "CidrBlock" : "172.31.255.16/28",
+                "Tags" : [ {"Key" : "Name", "Value" : "Docker-Demo-Private-Subnet"}]
+            },
         },
 
         "PublicRouteTable" : {
@@ -100,8 +102,7 @@
             "Properties" : {
                 "RouteTableId" : { "Ref" : "PublicRouteTable" },
                 "DestinationCidrBlock" : "0.0.0.0/0",
-                "GatewayId" : { "Ref" : "InternetGateway" }
-            }
+                "GatewayId" : { "Ref" : "InternetGateway" }            }
         },
 
         "PrivateRoute" : {
@@ -123,7 +124,7 @@
         "NAT" : {
             "Type" : "AWS::EC2::NatGateway",
             "Properties" : {
-            "AllocationId" : { "Fn::GetAtt" : ["EIP", "AllocationId"]},
+                "AllocationId" : { "Fn::GetAtt" : ["EIP", "AllocationId"]},
                 "SubnetId" : { "Ref" : "PublicSubnet"}
             }
         },
@@ -215,7 +216,12 @@
                 "LaunchConfigurationName" : { "Ref" : "LaunchConfig" },
                 "MinSize" : "0",
                 "MaxSize" : "5",
-                "DesiredCapacity" : { "Ref" : "NumInstances" }
+                "DesiredCapacity" : { "Ref" : "NumInstances" },
+                "Tags": [{
+                        "Value": "Docker-Demo",
+                        "Key": "Name",
+                        "PropagateAtLaunch": "true"
+                }]
             },
             "CreationPolicy" : {
                 "ResourceSignal" : {
@@ -269,7 +275,7 @@
             "DependsOn" : "NAT",
             "Properties": {
                 "ImageId" : "ami-55ef662f",
-                "InstanceType"   : "t2.small",
+                "InstanceType"   : "t2.nano",
                 "KeyName" : "Keys",
                 "SecurityGroups" : [ {"Ref" : "SecurityGroup"} ],
                 "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
@@ -287,14 +293,15 @@
                     "         --resource ASG ",
                     "         --region ", { "Ref" : "AWS::Region" }, "\n"
                 ]]}}
-            }
+            },
         },
 
         "SecurityGroup" : {
             "Type" : "AWS::EC2::SecurityGroup",
             "Properties" : {
                 "GroupDescription" : "Very Restrictive Security Group",
-                "VpcId" : { "Ref" : "VPC" }
+                "VpcId" : { "Ref" : "VPC" },
+                "Tags" : [ {"Key" : "Name", "Value" : "Docker-Demo-SG"}]
             }
         }
     },

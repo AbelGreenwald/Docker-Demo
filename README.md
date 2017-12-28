@@ -22,6 +22,8 @@ Hard Coded Defaults:
 
 **Instance Count:** Min 0, Max 5
 
+**Instance Type:** t2.nano
+
 **Stack Name:** Docker-Hello-World
 
 **NetworkAclEntries:** Allow ALL traffic
