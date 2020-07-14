@@ -15,5 +15,5 @@ fi
 # Create the stack
 aws cloudformation create-stack \
     --stack-name Docker-Hello-World \
-    --template-body file://cf_template.yaml \
+    --template-body file://cf_template.json \
     --parameters ParameterKey=NumInstances,ParameterValue=$1
